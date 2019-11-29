@@ -58,15 +58,16 @@ def main_crawl(is_watch_mode=True):
             mkdir('data/' + profile_username)
             open('data/' + profile_username + '/list.txt', 'a').close()
 
-        for item in _sharedData['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['edges']:
-            if config.MULTITHREADING and is_watch_mode == False:
-                t = Thread(target=getImage, args=(item['node']['shortcode'], profile_username))
-                threads.append(t)
-            else:
-                getImage(item['node']['shortcode'], profile_username)
+        if 'ProfilePage' in _sharedData['entry_data']:
+            for item in _sharedData['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['edges']:
+                if config.MULTITHREADING and is_watch_mode == False:
+                    t = Thread(target=getImage, args=(item['node']['shortcode'], profile_username))
+                    threads.append(t)
+                else:
+                    getImage(item['node']['shortcode'], profile_username)
 
-        if _sharedData['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['page_info']['has_next_page'] == True and is_watch_mode == False:
-            next(profile_id, _sharedData['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['page_info']['end_cursor'], profile_username, threads)
+            if _sharedData['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['page_info']['has_next_page'] == True and is_watch_mode == False:
+                next(profile_id, _sharedData['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['page_info']['end_cursor'], profile_username, threads)
 
     if len(threads) > 0:
         for x in threads:
