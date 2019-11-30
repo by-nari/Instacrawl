@@ -51,14 +51,14 @@ def main_crawl(is_watch_mode=True):
         response = get('https://www.instagram.com/' + profile, headers=headers).text
         _sharedData = loads(search('window\._sharedData = (.+);</script>', response)[1])
 
-        profile_id = _sharedData['entry_data']['ProfilePage'][0]['graphql']['user']['id']
-        profile_username = _sharedData['entry_data']['ProfilePage'][0]['graphql']['user']['username']
-
-        if path.isdir('data/' + profile_username) == False:
-            mkdir('data/' + profile_username)
-            open('data/' + profile_username + '/list.txt', 'a').close()
-
         if 'ProfilePage' in _sharedData['entry_data']:
+            profile_id = _sharedData['entry_data']['ProfilePage'][0]['graphql']['user']['id']
+            profile_username = _sharedData['entry_data']['ProfilePage'][0]['graphql']['user']['username']
+
+            if path.isdir('data/' + profile_username) == False:
+                mkdir('data/' + profile_username)
+                open('data/' + profile_username + '/list.txt', 'a').close()
+
             for item in _sharedData['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['edges']:
                 if config.MULTITHREADING and is_watch_mode == False:
                     t = Thread(target=getImage, args=(item['node']['shortcode'], profile_username))
