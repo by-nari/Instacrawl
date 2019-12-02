@@ -83,5 +83,6 @@ if __name__ == '__main__':
 
     if config.WATCH:
         print('Start watching')
-        sleep(config.WATCH_INTERVAL)
-        main_crawl()
+        while True:
+            sleep(config.WATCH_INTERVAL)
+            main_crawl()
