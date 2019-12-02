@@ -5,7 +5,6 @@ from os import mkdir, path
 from requests import get
 from time import sleep
 from re import search
-import schedule
 import config
 
 headers = {
@@ -84,7 +83,5 @@ if __name__ == '__main__':
 
     if config.WATCH:
         print('Start watching')
-        schedule.every(config.WATCH_INTERVAL).minutes.do(main_crawl)
-        while True:
-            schedule.run_pending()
-            sleep(1)
+        sleep(config.WATCH_INTERVAL)
+        main_crawl()
